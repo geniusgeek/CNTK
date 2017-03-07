@@ -555,7 +555,7 @@ namespace CNTK
 
         // Now, make sure that the device vectores are initialized.
         const auto& allDevices = AllDevices();
-        UNUSED(allDevices);
+        CNTK_UNUSED(allDevices);
 
         auto result = std::find_if(s_gpuProperties.begin(), s_gpuProperties.end(),
             [&device](const GPUProperties& props) { return device.Id() == props.deviceId; });
