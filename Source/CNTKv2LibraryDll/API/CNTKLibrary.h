@@ -4967,6 +4967,25 @@ namespace CNTK
     };
 
     ///
+    /// Test configuration
+    ///
+    struct TestConfig
+    {
+    public:
+        /// Test configuration.
+        /// source : a minibatch source that will be used for test
+        /// schedule : a minibatch size schedule
+        ///
+        CNTK_API TestConfig(const MinibatchSourcePtr& source,
+            const MinibatchSizeSchedule& schedule = MinibatchSizeSchedule(1));
+
+    private:
+        friend class TrainingSession;
+        const MinibatchSourcePtr m_source;
+        const MinibatchSizeSchedule m_mbSize;
+    };
+
+    ///
     /// Base abstract class that represents a training session.
     /// Derived classes can redefine different aspects of training, overriding base virtual methods (GetMinibatchSize, OnMinibatchStart, etc.)
     ///
@@ -4998,7 +5017,8 @@ namespace CNTK
             size_t maxNumTrainingSamples,
             size_t progressFrequency,
             const CheckpointConfig& checkpointing,
-            const CrossValidationConfig& crossValidation);
+            const CrossValidationConfig& crossValidation,
+            const TestConfig& test);
 
         /// !!! DEPRECATED !!!
         /// Constructor of the training session: 
@@ -5111,6 +5131,7 @@ namespace CNTK
 
         bool CrossValidate(size_t currentIndex, const DeviceDescriptor& computeDevice);
         void ReportProgress(size_t currentIndex);
+        void Test(const DeviceDescriptor& computeDevice);
 
         size_t m_parallelAfterSamples;
         size_t m_workerRank;
@@ -5129,6 +5150,7 @@ namespace CNTK
         // Additional configuration.
         CheckpointConfig m_checkpoint;
         CrossValidationConfig m_cv;
+        TestConfig m_test;
     };
 
     ///
@@ -5260,7 +5282,8 @@ namespace CNTK
         size_t maxNumTrainingSamples,
         size_t progressFrequency,
         const CheckpointConfig& checkpointing,
-        const CrossValidationConfig& crossValidation);
+        const CrossValidationConfig& crossValidation,
+        const TestConfig& test);
 }
 
 
